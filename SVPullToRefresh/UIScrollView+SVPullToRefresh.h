@@ -20,6 +20,10 @@ typedef NS_ENUM(NSUInteger, SVPullToRefreshPosition) {
     SVPullToRefreshPositionBottom,
 };
 
+// typedef NS_ENUM 类似下面的解释
+//enum SVPullToRefreshPosition :NSInteger {};
+//typedef enum SVPullToRefreshPosition : NSInteger SVPullToRefreshPosition;
+
 - (void)addPullToRefreshWithActionHandler:(void (^)(void))actionHandler;
 - (void)addPullToRefreshWithActionHandler:(void (^)(void))actionHandler position:(SVPullToRefreshPosition)position;
 - (void)triggerPullToRefresh;
@@ -32,7 +36,7 @@ typedef NS_ENUM(NSUInteger, SVPullToRefreshPosition) {
 
 typedef NS_ENUM(NSUInteger, SVPullToRefreshState) {
     SVPullToRefreshStateStopped = 0,
-    SVPullToRefreshStateTriggered,
+    SVPullToRefreshStateTriggered,  //
     SVPullToRefreshStateLoading,
     SVPullToRefreshStateAll = 10
 };

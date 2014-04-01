@@ -50,8 +50,10 @@
 - (void)insertRowAtTop {
     __weak SVViewController *weakSelf = self;
 
-    int64_t delayInSeconds = 2.0;
+    int64_t delayInSeconds = 1.0;
+    // 延迟delayInSeconds秒数,
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    // after dispatch_time_t 秒后操作一个线程
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [weakSelf.tableView beginUpdates];
         [weakSelf.dataSource insertObject:[NSDate date] atIndex:0];
