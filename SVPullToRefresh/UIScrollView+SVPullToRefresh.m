@@ -95,6 +95,7 @@ static char UIScrollViewPullToRefreshView;
 
 - (void)addPullToRefreshWithActionHandler:(void (^)(void))actionHandler {
     [self addPullToRefreshWithActionHandler:actionHandler position:SVPullToRefreshPositionTop];
+    // [self addPullToRefreshWithActionHandler:actionHandler position:SVPullToRefreshPositionBottom];
 }
 
 - (void)triggerPullToRefresh {
@@ -114,6 +115,11 @@ static char UIScrollViewPullToRefreshView;
     return objc_getAssociatedObject(self, &UIScrollViewPullToRefreshView);
 }
 
+/**
+ *  设置kvo观察者
+ *
+ *  @param showsPullToRefresh 显示刷新提示view
+ */
 - (void)setShowsPullToRefresh:(BOOL)showsPullToRefresh {
     self.pullToRefreshView.hidden = !showsPullToRefresh;
     
@@ -391,6 +397,7 @@ static char UIScrollViewPullToRefreshView;
 }
 
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
+    
     if(self.state != SVPullToRefreshStateLoading) {
         CGFloat scrollOffsetThreshold = 0;
         switch (self.position) {
@@ -401,15 +408,16 @@ static char UIScrollViewPullToRefreshView;
                 scrollOffsetThreshold = MAX(self.scrollView.contentSize.height - self.scrollView.bounds.size.height, 0.0f) + self.bounds.size.height + self.originalBottomInset;
                 break;
         }
+        NSLog(@" contentOffset : %f, state : %d, scrollOffsetThreshold : %f, position : %d", contentOffset.y, self.state, scrollOffsetThreshold, self.position);
         
         if(!self.scrollView.isDragging && self.state == SVPullToRefreshStateTriggered)
             self.state = SVPullToRefreshStateLoading;
         else if(contentOffset.y < scrollOffsetThreshold && self.scrollView.isDragging && self.state == SVPullToRefreshStateStopped && self.position == SVPullToRefreshPositionTop)
-            self.state = SVPullToRefreshStateTriggered;
+            self.state = SVPullToRefreshStateTriggered; // 顶部，位移第一次超过60，改变状态0->1
         else if(contentOffset.y >= scrollOffsetThreshold && self.state != SVPullToRefreshStateStopped && self.position == SVPullToRefreshPositionTop)
-            self.state = SVPullToRefreshStateStopped;
+            self.state = SVPullToRefreshStateStopped;   // 顶部，位移恢复，比如一直拖拽然后又拖着回去，虽然改变了状态但还是要改回去 1->0
         else if(contentOffset.y > scrollOffsetThreshold && self.scrollView.isDragging && self.state == SVPullToRefreshStateStopped && self.position == SVPullToRefreshPositionBottom)
-            self.state = SVPullToRefreshStateTriggered;
+            self.state = SVPullToRefreshStateTriggered; // 底部，
         else if(contentOffset.y <= scrollOffsetThreshold && self.state != SVPullToRefreshStateStopped && self.position == SVPullToRefreshPositionBottom)
             self.state = SVPullToRefreshStateStopped;
     } else {

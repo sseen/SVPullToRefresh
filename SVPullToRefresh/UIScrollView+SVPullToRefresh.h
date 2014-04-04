@@ -21,7 +21,7 @@ typedef NS_ENUM(NSUInteger, SVPullToRefreshPosition) {
 };
 
 // typedef NS_ENUM 类似下面的解释
-//enum SVPullToRefreshPosition :NSInteger {};
+//enum SVPullToRefreshPosition :NSInteger { SVPullToRefresPositionTop=0};
 //typedef enum SVPullToRefreshPosition : NSInteger SVPullToRefreshPosition;
 
 - (void)addPullToRefreshWithActionHandler:(void (^)(void))actionHandler;
@@ -41,6 +41,9 @@ typedef NS_ENUM(NSUInteger, SVPullToRefreshState) {
     SVPullToRefreshStateAll = 10
 };
 
+/**
+ *  是刷新的view定制
+ */
 @interface SVPullToRefreshView : UIView
 
 @property (nonatomic, strong) UIColor *arrowColor;
