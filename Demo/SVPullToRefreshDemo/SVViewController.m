@@ -27,6 +27,7 @@
     // setup pull-to-refresh
     [self.tableView addPullToRefreshWithActionHandler:^{
         [weakSelf insertRowAtTop];
+        [weakSelf insertManyRowsAtTop];
     }];
         
     // setup infinite scrolling
@@ -64,6 +65,42 @@
     });
 }
 
+//
+// 一次插入多行
+//
+// Created by ssn on 2014年4月5日 星期六
+//
+- (void)insertManyRowsAtTop {
+    __weak SVViewController *weakSelf = self;
+    
+    int64_t delayInSeconds = 1.0;
+    // 延迟delayInSeconds秒数,
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    // after dispatch_time_t 秒后操作一个线程
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [weakSelf.tableView beginUpdates];
+        
+        
+        // 1-2 插入数据源
+        [weakSelf.dataSource insertObject:[NSDate date] atIndex:0];
+        [weakSelf.dataSource insertObject:[NSDate date] atIndex:1];
+        [weakSelf.dataSource insertObject:[NSDate date] atIndex:2];
+        // 2-2 插入indexPath
+        /*
+        NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+        [indexPaths addObject:indexPath];
+         */
+        
+        [weakSelf.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:0 inSection:0],
+                                                     [NSIndexPath indexPathForRow:1 inSection:0],
+                                                     [NSIndexPath indexPathForRow:2 inSection:0],] withRowAnimation:UITableViewRowAnimationBottom];
+        [weakSelf.tableView endUpdates];
+        
+        [weakSelf.tableView.pullToRefreshView stopAnimating];
+    });
+}
+
 
 - (void)insertRowAtBottom {
     __weak SVViewController *weakSelf = self;
@@ -79,6 +116,7 @@
         [weakSelf.tableView.infiniteScrollingView stopAnimating];
     });
 }
+
 #pragma mark -
 #pragma mark UITableViewDataSource
 

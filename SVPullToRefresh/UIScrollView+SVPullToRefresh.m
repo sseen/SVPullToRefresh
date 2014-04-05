@@ -411,7 +411,7 @@ static char UIScrollViewPullToRefreshView;
         NSLog(@" contentOffset : %f, state : %d, scrollOffsetThreshold : %f, position : %d", contentOffset.y, self.state, scrollOffsetThreshold, self.position);
         
         if(!self.scrollView.isDragging && self.state == SVPullToRefreshStateTriggered)
-            self.state = SVPullToRefreshStateLoading;
+            self.state = SVPullToRefreshStateLoading;   // 不论顶部还是底部，只要是triggered的状态还在拖拽就会更新插入新数据
         else if(contentOffset.y < scrollOffsetThreshold && self.scrollView.isDragging && self.state == SVPullToRefreshStateStopped && self.position == SVPullToRefreshPositionTop)
             self.state = SVPullToRefreshStateTriggered; // 顶部，位移第一次超过60，改变状态0->1
         else if(contentOffset.y >= scrollOffsetThreshold && self.state != SVPullToRefreshStateStopped && self.position == SVPullToRefreshPositionTop)
@@ -636,7 +636,11 @@ static char UIScrollViewPullToRefreshView;
             break;
     }
 }
-
+//
+// 修改了set方法
+//
+// Created by ssn on 2014年4月5日 星期六
+//
 - (void)setState:(SVPullToRefreshState)newState {
     
     if(_state == newState)
