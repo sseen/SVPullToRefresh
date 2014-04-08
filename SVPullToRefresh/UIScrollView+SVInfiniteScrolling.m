@@ -191,6 +191,11 @@ UIEdgeInsets scrollViewOriginalContentInsets;
     }
 }
 
+/**
+ *  contentOffset + scrollView.bounds.size.height = contentSize.height
+ *
+ *  @param contentOffset contentOffset
+ */
 - (void)scrollViewDidScroll:(CGPoint)contentOffset {
     if(self.state != SVInfiniteScrollingStateLoading && self.enabled) {
         CGFloat scrollViewContentHeight = self.scrollView.contentSize.height;
@@ -198,6 +203,9 @@ UIEdgeInsets scrollViewOriginalContentInsets;
         
         NSLog(@"____ contentOffset : %f, state : %d, contentSize.height: %f, scrollOffsetThreshold : %f, self.scrollView.bounds.size.height : %f, self.scrollView.isDragging: %d", contentOffset.y, self.state, self.scrollView.contentSize.height,scrollOffsetThreshold, self.scrollView.bounds.size.height, self.scrollView.isDragging);
         
+        // 这个isDragging很特别，要是拖着的话一直都是1，就算你拖着然后慢慢放开也是1
+        // 只有用滑屏操作先手拖让屏幕滚动然后松开手指，这个时候是1当屏幕停下来的时候是0
+        // 因为scrollview的底部或者顶部都会有个回弹效果，所以这个值在顶部或者底部的时候都会为0
         if(!self.scrollView.isDragging && self.state == SVInfiniteScrollingStateTriggered)
             self.state = SVInfiniteScrollingStateLoading;
         else if(contentOffset.y > scrollOffsetThreshold && self.state == SVInfiniteScrollingStateStopped && self.scrollView.isDragging)

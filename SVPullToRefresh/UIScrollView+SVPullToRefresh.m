@@ -408,7 +408,7 @@ static char UIScrollViewPullToRefreshView;
                 scrollOffsetThreshold = MAX(self.scrollView.contentSize.height - self.scrollView.bounds.size.height, 0.0f) + self.bounds.size.height + self.originalBottomInset;
                 break;
         }
-        NSLog(@" contentOffset : %f, state : %d, scrollOffsetThreshold : %f, position : %d", contentOffset.y, self.state, scrollOffsetThreshold, self.position);
+        //NSLog(@" contentOffset : %f, state : %d, scrollOffsetThreshold : %f, position : %d", contentOffset.y, self.state, scrollOffsetThreshold, self.position);
         
         if(!self.scrollView.isDragging && self.state == SVPullToRefreshStateTriggered)
             self.state = SVPullToRefreshStateLoading;   // 不论顶部还是底部，只要是triggered的状态还在拖拽就会更新插入新数据
